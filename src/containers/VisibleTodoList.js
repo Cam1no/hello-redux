@@ -1,9 +1,23 @@
 import { connect } from 'react-redux'
-import TodoList from '../components/TodoList'
 import { toggleTodo } from '../actions'
+import TodoList from '../components/TodoList'
+
+const getVisibleTodos = (todos, filter) => {
+  // eslint-disable-next-line
+  switch (filter) {
+    case 'SHOW_ALL':
+      return todos
+    case 'SHOW_COMPLETED':
+      return todos.filter((t) => t.completed)
+    case 'SHOW_ACTIVE':
+      return todos.filter((t) => !t.completed)
+  }
+}
 
 const mapStateToProps = (state) => {
-  return { todos: state.todos }
+  return {
+    todos: getVisibleTodos(state.todos, state.visibilityFilter)
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -18,4 +32,5 @@ const VisibleTodoList = connect(
   mapStateToProps,
   mapDispatchToProps
 )(TodoList)
+
 export default VisibleTodoList
